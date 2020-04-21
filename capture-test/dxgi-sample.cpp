@@ -178,7 +178,7 @@ BOOL VideoDXGICaptor::QueryFrame(void *pImgData)
 
     IDXGIResource *hDesktopResource = NULL;
     DXGI_OUTDUPL_FRAME_INFO FrameInfo;
-    HRESULT hr = m_hDeskDupl->AcquireNextFrame(0, &FrameInfo, &hDesktopResource);
+    HRESULT hr = m_hDeskDupl->AcquireNextFrame(200, &FrameInfo, &hDesktopResource);
     if (FAILED(hr))
     {
         return TRUE;
