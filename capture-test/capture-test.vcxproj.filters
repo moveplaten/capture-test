@@ -21,5 +21,13 @@
     <ClCompile Include="capture-func.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="dxgi-sample.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dxgi-sample.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
