@@ -19,7 +19,7 @@ int capture(HWND hwnd)
     void * mempp = CaptureInternal(); //TODO
     HBITMAP hBitmap = CreateBitmap(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), 1, 32, mempp);
     free(mempp);
-    SelectObject(hdcMem, hBitmap);
+    HGDIOBJ Old = SelectObject(hdcMem, hBitmap);
 
     StretchBlt(hdcWindow,
         0, 0,
@@ -30,6 +30,7 @@ int capture(HWND hwnd)
         GetSystemMetrics(SM_CYSCREEN),
         SRCCOPY);
 
+    SelectObject(hdcMem, Old);
     DeleteObject(hBitmap);
     ReleaseDC(hwnd, hdcMem);
     ReleaseDC(hwnd, hdcWindow);
