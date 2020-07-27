@@ -1,2 +1,2 @@
 # capture-test
-TODO
+fixing and adding some new features now.
