@@ -263,7 +263,7 @@ void * CaptureInternal(void)
     CaptureTest->Init();
     void *pImgData = nullptr;
     pImgData = malloc(9999999);
-
+    Sleep(100);  //perhaps found some reasons, but still not a perfert solution
     CaptureTest->CaptureImage(pImgData);
     delete CaptureTest;
     //free(pImgData);
