@@ -1,6 +1,6 @@
 ﻿#include <stdio.h>
 #include <windows.h>
-
+extern bool moving;
 
 ATOM MyRegisterClass(HINSTANCE hInstance);
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);
@@ -15,7 +15,7 @@ typedef struct CapRect {
 int main(void)
 {
     printf("capture test!\n");
-
+    moving = FALSE;
     HINSTANCE hInstance = GetModuleHandle(0);
     int nCmdShow = SW_SHOWDEFAULT;
 
@@ -48,7 +48,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         printf("\nmouse left button down at (%d, %d)\n", LOWORD(lParam), HIWORD(lParam));
         //ValidateRect(hWnd, NULL);
         //PAINTSTRUCT ps;
-
+        moving = FALSE;
         HDC hdc = GetDC(hWnd);
 
         SetTextColor(hdc, RGB(0, 255, 255));
@@ -78,12 +78,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 
     case WM_MOVING:
-
+    {
+        moving = TRUE;
         ////////////////////////////
         capture(hWnd);
         ////////////////////////////
-
-        break;
+    }
+    break;
 
 
     case WM_PAINT:

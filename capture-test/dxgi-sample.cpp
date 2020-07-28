@@ -1,5 +1,5 @@
 #include <windows.h>
-
+#include <stdio.h>
 #include "dxgi-sample.h"
 
 #pragma comment(lib, "d3d11.lib")
@@ -263,7 +263,11 @@ void * CaptureInternal(void)
     CaptureTest->Init();
     void *pImgData = nullptr;
     pImgData = malloc(9999999);
-    Sleep(100);  //perhaps found some reasons, but still not a perfert solution
+    if(moving == FALSE)
+    {
+        Sleep(100);  //perhaps found some reasons, but still not a perfect solution
+        printf("Sleeping\n");
+    }
     CaptureTest->CaptureImage(pImgData);
     delete CaptureTest;
     //free(pImgData);
