@@ -110,7 +110,7 @@ BOOL VideoDXGICaptor::Init()
     // QI for Output 1  // IDXGIOutput1 have DuplicateOutput function
     //
     IDXGIOutput1 *hDxgiOutput1 = NULL;
-    hr = hDxgiOutput->QueryInterface(__uuidof(hDxgiOutput1), reinterpret_cast<void**>(&hDxgiOutput1));
+    hr = hDxgiOutput->QueryInterface(__uuidof(IDXGIOutput1), reinterpret_cast<void**>(&hDxgiOutput1));
     RESET_OBJECT(hDxgiOutput);
     if (FAILED(hr))
     {
@@ -123,6 +123,11 @@ BOOL VideoDXGICaptor::Init()
     hr = hDxgiOutput1->DuplicateOutput(m_hDevice, &m_hDeskDupl);
     RESET_OBJECT(hDxgiOutput1);
     if (FAILED(hr))
+    {
+        return FALSE;
+    }
+
+    if(m_hDeskDupl == NULL)
     {
         return FALSE;
     }
@@ -182,7 +187,7 @@ BOOL VideoDXGICaptor::QueryFrame(void *pImgData)
     HRESULT hr = m_hDeskDupl->AcquireNextFrame(200, &FrameInfo, &hDesktopResource);
     if (FAILED(hr))
     {
-        return TRUE;
+        return FALSE;
     }
 
     //
@@ -260,7 +265,13 @@ void * CaptureInternal(void)
 {
     VideoDXGICaptor *CaptureTest;
     CaptureTest = new VideoDXGICaptor();
-    CaptureTest->Init();
+    BOOL result = CaptureTest->Init();
+    if (result == FALSE)
+    {
+        MessageBox(nullptr, "Direct3D Initial Failed\nMissing Desktop Duplication API", "Error", 0);
+        printf("stop\n");
+        exit(0);
+    }
     void *pImgData = nullptr;
     pImgData = malloc(9999999);
     if(moving == FALSE)
