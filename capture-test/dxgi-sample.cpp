@@ -268,9 +268,8 @@ void * CaptureInternal(void)
     BOOL result = CaptureTest->Init();
     if (result == FALSE)
     {
-        MessageBox(nullptr, "Direct3D Initial Failed\nMissing Desktop Duplication API", "Error", 0);
-        printf("stop\n");
-        exit(0);
+        printf("Direct3D Initial Failed\nMissing Desktop Duplication API\n");
+        return NULL;
     }
     void *pImgData = nullptr;
     pImgData = malloc(9999999);
