@@ -51,7 +51,7 @@ int capture(HWND hwnd)
         &bi,
         DIB_RGB_COLORS,
         SRCCOPY);
-    free(mempp);
+//    free(mempp);
 //    SelectObject(hdcMem, Old);
 //    DeleteObject(hBitmap);
 //    ReleaseDC(hwnd, hdcMem);

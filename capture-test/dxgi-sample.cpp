@@ -263,23 +263,35 @@ BOOL VideoDXGICaptor::QueryFrame(void *pImgData)
 
 void * CaptureInternal(void)
 {
-    VideoDXGICaptor *CaptureTest;
-    CaptureTest = new VideoDXGICaptor();
-    BOOL result = CaptureTest->Init();
-    if (result == FALSE)
+    static bool first = TRUE;
+    static bool dc_capture = FALSE;
+    static VideoDXGICaptor *CaptureTest;
+    static void *pImgData = nullptr;
+    if(first == TRUE)
     {
-        printf("Direct3D Initial Failed\nMissing Desktop Duplication API\n");
+        CaptureTest = new VideoDXGICaptor();
+        BOOL result = CaptureTest->Init();
+        if (result == FALSE)
+        {
+            printf("Direct3D Initial Failed\nMissing Desktop Duplication API\n");
+            dc_capture = TRUE;
+            first = FALSE;
+            return NULL;
+        }
+        pImgData = malloc(9999999);
+        first = FALSE;
+        printf("First Initial Succeed\n");
+        Sleep(200);  //perhaps found some reasons, but still not a perfect solution
+        printf("First Sleeping\n");
+    }
+
+    if(dc_capture == TRUE)
+    {
         return NULL;
     }
-    void *pImgData = nullptr;
-    pImgData = malloc(9999999);
-    if(moving == FALSE)
-    {
-        Sleep(100);  //perhaps found some reasons, but still not a perfect solution
-        printf("Sleeping\n");
-    }
+
     CaptureTest->CaptureImage(pImgData);
-    delete CaptureTest;
+    //delete CaptureTest;
     //free(pImgData);
     return pImgData;
 }
