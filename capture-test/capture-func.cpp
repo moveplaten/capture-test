@@ -22,6 +22,7 @@ int capture(HWND hwnd)
     if(mempp == NULL)
     {
         capture_DC(hwnd);
+        return 1;
     }
 //    HBITMAP hBitmap = CreateBitmap(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), 1, 32, mempp);
 //    free(mempp);
