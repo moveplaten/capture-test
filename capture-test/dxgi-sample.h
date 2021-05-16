@@ -14,11 +14,11 @@ public:
     VOID Deinit();
 
 public:
-    virtual BOOL CaptureImage(void *pData);
+    virtual BOOL CaptureImage(void **pData);
     virtual BOOL ResetDevice();
 
 private:
-    BOOL  QueryFrame(void *pImgData);
+    BOOL  QueryFrame(void **pImgData);
 
 private:
     BOOL                    m_bInit;

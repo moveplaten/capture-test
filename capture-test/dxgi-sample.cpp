@@ -165,7 +165,7 @@ VOID VideoDXGICaptor::Deinit()
     }
 }
 
-BOOL VideoDXGICaptor::CaptureImage(void *pData)
+BOOL VideoDXGICaptor::CaptureImage(void **pData)
 {
     return QueryFrame(pData);
 }
@@ -174,7 +174,7 @@ BOOL VideoDXGICaptor::ResetDevice()
     Deinit();
     return Init();
 }
-BOOL VideoDXGICaptor::QueryFrame(void *pImgData)
+BOOL VideoDXGICaptor::QueryFrame(void **pImgData)
 {
 
     if (!m_dxgiOutDesc.AttachedToDesktop)
@@ -252,8 +252,9 @@ BOOL VideoDXGICaptor::QueryFrame(void *pImgData)
     hr = hStagingSurf->Map(&mappedRect, DXGI_MAP_READ);
     if (SUCCEEDED(hr))
     {
-        memcpy((BYTE*)pImgData, mappedRect.pBits, m_dxgiOutDesc.DesktopCoordinates.right * m_dxgiOutDesc.DesktopCoordinates.bottom * 4);
+        //memcpy((BYTE*)pImgData, mappedRect.pBits, m_dxgiOutDesc.DesktopCoordinates.right * m_dxgiOutDesc.DesktopCoordinates.bottom * 4);
         hStagingSurf->Unmap();
+        *pImgData = mappedRect.pBits;
     }
 
     RESET_OBJECT(hStagingSurf);
@@ -278,7 +279,7 @@ void * CaptureInternal(void)
             first = FALSE;
             return NULL;
         }
-        pImgData = malloc(9999999);
+        //pImgData = malloc(9999999);
         first = FALSE;
         printf("First Initial Succeed\n");
         Sleep(200);  //perhaps found some reasons, but still not a perfect solution
@@ -290,7 +291,7 @@ void * CaptureInternal(void)
         return NULL;
     }
 
-    CaptureTest->CaptureImage(pImgData);
+    CaptureTest->CaptureImage(&pImgData);
     //delete CaptureTest;
     //free(pImgData);
     return pImgData;
