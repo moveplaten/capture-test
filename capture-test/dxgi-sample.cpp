@@ -52,12 +52,44 @@ BOOL VideoDXGICaptor::Init()
 
     D3D_FEATURE_LEVEL FeatureLevel;
 
+
+    IDXGIFactory1 *pFactory = NULL;
+    hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(&pFactory));
+    if (FAILED(hr))
+    {
+        return FALSE;
+    }
+
+    UINT numAdp = 0;
+    IDXGIAdapter *pAdapter = NULL;
+    IDXGIAdapter *pAdapterIN = NULL;
+    for (UINT i = 0; hr != DXGI_ERROR_NOT_FOUND; numAdp = i++)
+    {
+        hr = pFactory->EnumAdapters(i, &pAdapter);
+        DXGI_ADAPTER_DESC desc;
+        if (hr != DXGI_ERROR_NOT_FOUND)
+        {
+            pAdapter->GetDesc(&desc);
+            printf("\n%d: %ls", i, desc.Description);
+        }
+    }
+    
+    while (printf("\nEnter the Adapter number: "))
+    {
+        UINT a = 0;
+        scanf_s("%d", &a);
+        hr = pFactory->EnumAdapters(a, &pAdapterIN);
+        if (a >= 0 && SUCCEEDED(hr)) break;
+    }
+
     //
     // Create D3D device
     //
     for (UINT DriverTypeIndex = 0; DriverTypeIndex < NumDriverTypes; ++DriverTypeIndex)
     {
-        hr = D3D11CreateDevice(NULL, DriverTypes[DriverTypeIndex], NULL, 0, FeatureLevels, NumFeatureLevels, D3D11_SDK_VERSION, &m_hDevice, &FeatureLevel, &m_hContext);
+        if (numAdp <= 1)  hr = D3D11CreateDevice(NULL, DriverTypes[DriverTypeIndex], NULL, 0, FeatureLevels, NumFeatureLevels, D3D11_SDK_VERSION, &m_hDevice, &FeatureLevel, &m_hContext);
+        else hr = D3D11CreateDevice(pAdapterIN, D3D_DRIVER_TYPE_UNKNOWN, NULL, 0, FeatureLevels, NumFeatureLevels, D3D11_SDK_VERSION, &m_hDevice, &FeatureLevel, &m_hContext);
+
         if (SUCCEEDED(hr))
         {
             break;
