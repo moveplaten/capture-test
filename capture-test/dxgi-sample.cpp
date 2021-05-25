@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include "dxgi-sample.h"
+extern VideoDXGICaptor* dxgi_capt;
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -16,11 +17,48 @@ VideoDXGICaptor::VideoDXGICaptor()
     m_hDeskDupl = NULL;
 
     ZeroMemory(&m_dxgiOutDesc, sizeof(m_dxgiOutDesc));
+
+    numAdp = 0;
+    pAdapterIN = NULL;
 }
 VideoDXGICaptor::~VideoDXGICaptor()
 {
     Deinit();
 }
+
+BOOL VideoDXGICaptor::SelectAdapters(void)
+{
+    HRESULT hr = S_OK;
+    IDXGIFactory1 *pFactory = NULL;
+    hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(&pFactory));
+    if (FAILED(hr))
+    {
+        return FALSE;
+    }
+
+    IDXGIAdapter *pAdapter = NULL;
+
+    for (UINT i = 0; hr != DXGI_ERROR_NOT_FOUND; numAdp = i++)
+    {
+        hr = pFactory->EnumAdapters(i, &pAdapter);
+        DXGI_ADAPTER_DESC desc;
+        if (hr != DXGI_ERROR_NOT_FOUND)
+        {
+            pAdapter->GetDesc(&desc);
+            printf("\n%d: %ls", i, desc.Description);
+        }
+    }
+    
+    while (printf("\nEnter the Adapter number: "))
+    {
+        UINT a = 0;
+        scanf_s("%d", &a);
+        hr = pFactory->EnumAdapters(a, &pAdapterIN);
+        if (a >= 0 && SUCCEEDED(hr)) break;
+    }
+    return TRUE;
+}
+
 BOOL VideoDXGICaptor::Init()
 {
     HRESULT hr = S_OK;
@@ -51,36 +89,6 @@ BOOL VideoDXGICaptor::Init()
     UINT NumFeatureLevels = ARRAYSIZE(FeatureLevels);
 
     D3D_FEATURE_LEVEL FeatureLevel;
-
-
-    IDXGIFactory1 *pFactory = NULL;
-    hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(&pFactory));
-    if (FAILED(hr))
-    {
-        return FALSE;
-    }
-
-    UINT numAdp = 0;
-    IDXGIAdapter *pAdapter = NULL;
-    IDXGIAdapter *pAdapterIN = NULL;
-    for (UINT i = 0; hr != DXGI_ERROR_NOT_FOUND; numAdp = i++)
-    {
-        hr = pFactory->EnumAdapters(i, &pAdapter);
-        DXGI_ADAPTER_DESC desc;
-        if (hr != DXGI_ERROR_NOT_FOUND)
-        {
-            pAdapter->GetDesc(&desc);
-            printf("\n%d: %ls", i, desc.Description);
-        }
-    }
-    
-    while (printf("\nEnter the Adapter number: "))
-    {
-        UINT a = 0;
-        scanf_s("%d", &a);
-        hr = pFactory->EnumAdapters(a, &pAdapterIN);
-        if (a >= 0 && SUCCEEDED(hr)) break;
-    }
 
     //
     // Create D3D device
@@ -298,22 +306,20 @@ void * CaptureInternal(void)
 {
     static bool first = TRUE;
     static bool dc_capture = FALSE;
-    static VideoDXGICaptor *CaptureTest;
     static void *pImgData = nullptr;
     if(first == TRUE)
     {
-        CaptureTest = new VideoDXGICaptor();
-        BOOL result = CaptureTest->Init();
+        BOOL result = dxgi_capt->Init();
         if (result == FALSE)
         {
-            printf("Direct3D Initial Failed\nMissing Desktop Duplication API\n");
+            printf("\nDirect3D Initial Failed\nMissing Desktop Duplication API\n");
             dc_capture = TRUE;
             first = FALSE;
             return NULL;
         }
         //pImgData = malloc(9999999);
         first = FALSE;
-        printf("First Initial Succeed\n");
+        printf("\nFirst Initial Succeed\n");
         Sleep(200);  //perhaps found some reasons, but still not a perfect solution
         printf("First Sleeping\n");
     }
@@ -323,7 +329,7 @@ void * CaptureInternal(void)
         return NULL;
     }
 
-    CaptureTest->CaptureImage(&pImgData);
+    dxgi_capt->CaptureImage(&pImgData);
     //delete CaptureTest;
     //free(pImgData);
     return pImgData;

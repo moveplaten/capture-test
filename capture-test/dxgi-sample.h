@@ -2,7 +2,7 @@
 
 #include <d3d11.h>
 #include <dxgi1_2.h>
-bool moving;
+
 class VideoDXGICaptor
 {
 public:
@@ -15,6 +15,7 @@ public:
 
 public:
     virtual BOOL CaptureImage(void **pData);
+    virtual BOOL SelectAdapters(void);
     virtual BOOL ResetDevice();
 
 private:
@@ -28,4 +29,7 @@ private:
 
     IDXGIOutputDuplication *m_hDeskDupl;
     DXGI_OUTPUT_DESC        m_dxgiOutDesc;
+
+    UINT                    numAdp;
+    IDXGIAdapter           *pAdapterIN;
 };
