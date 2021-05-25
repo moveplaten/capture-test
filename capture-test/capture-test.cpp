@@ -1,6 +1,9 @@
 ﻿#include <stdio.h>
 #include <windows.h>
-extern bool moving;
+#include "dxgi-sample.h"
+bool moving;
+
+VideoDXGICaptor *dxgi_capt;  //Global; try use pointer; Not static initializer;
 
 ATOM MyRegisterClass(HINSTANCE hInstance);
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);
@@ -20,6 +23,11 @@ int main(void)
     int nCmdShow = SW_SHOWDEFAULT;
 
     MyRegisterClass(hInstance);
+
+    VideoDXGICaptor V;
+    dxgi_capt = &V;
+    dxgi_capt->SelectAdapters();
+
     if (!InitInstance(hInstance, nCmdShow))
     {
         return FALSE;
