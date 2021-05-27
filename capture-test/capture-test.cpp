@@ -149,9 +149,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     rect.x = 300;
     rect.y = 300;
     rect.width = 640;
-    rect.height = 480;
+    rect.height = rect.width * ((float)GetSystemMetrics(SM_CYSCREEN) / (float)GetSystemMetrics(SM_CXSCREEN));
 
-    HWND hWnd = CreateWindowEx(0, szWindowClass, "capture-test",
+    HWND hWnd = CreateWindowEx(0, szWindowClass, dxgi_capt->GetSelAdpName(),
         WS_THICKFRAME,
         rect.x, rect.y, rect.width, rect.height, 0, 0, hInstance, 0);
 
@@ -160,7 +160,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
         return FALSE;
     }
 
-    SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    if (!IsDebuggerPresent()) SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
     return TRUE;

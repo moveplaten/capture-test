@@ -54,9 +54,21 @@ BOOL VideoDXGICaptor::SelectAdapters(void)
         UINT a = 0;
         scanf_s("%d", &a);
         hr = pFactory->EnumAdapters(a, &pAdapterIN);
-        if (a >= 0 && SUCCEEDED(hr)) break;
+        if (a >= 0 && SUCCEEDED(hr))
+        {
+            DXGI_ADAPTER_DESC desc;
+            pAdapterIN->GetDesc(&desc);
+            selAdpName = (char*) malloc(200);
+            sprintf(selAdpName, "%ls", desc.Description);
+            break;
+        }
     }
     return TRUE;
+}
+
+CHAR* VideoDXGICaptor::GetSelAdpName()
+{
+    return selAdpName;
 }
 
 BOOL VideoDXGICaptor::Init()

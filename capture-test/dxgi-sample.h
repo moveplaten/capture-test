@@ -12,6 +12,7 @@ public:
 public:
     BOOL Init();
     VOID Deinit();
+    CHAR* GetSelAdpName();
 
 public:
     virtual BOOL CaptureImage(void **pData);
@@ -32,4 +33,5 @@ private:
 
     UINT                    numAdp;
     IDXGIAdapter           *pAdapterIN;
+    CHAR                   *selAdpName;
 };
