@@ -91,6 +91,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         ////////////////////////////
         capture(hWnd);
         ////////////////////////////
+        size_t AdpLen = strlen(dxgi_capt->GetSelAdpName());
+        char TempChar[20];
+        ZeroMemory(TempChar, 20);
+        static int testfps = 0;
+        sprintf(TempChar, " (FPS: %d)", testfps++);
+        SetWindowTextA(hWnd, strcat(dxgi_capt->GetSelAdpName(), TempChar));
+        memset(dxgi_capt->GetSelAdpName() + AdpLen, 0, 200 - AdpLen);
     }
     break;
 

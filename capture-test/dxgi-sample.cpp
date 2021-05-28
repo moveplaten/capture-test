@@ -59,6 +59,7 @@ BOOL VideoDXGICaptor::SelectAdapters(void)
             DXGI_ADAPTER_DESC desc;
             pAdapterIN->GetDesc(&desc);
             selAdpName = (char*) malloc(200);
+            ZeroMemory(selAdpName, 200);
             sprintf(selAdpName, "%ls", desc.Description);
             break;
         }
