@@ -106,6 +106,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         capture(hWnd);
         ////////////////////////////
 
+        size_t AdpLen = strlen(dxgi_capt->GetSelAdpName());
+        char TempChar[50];
+        ZeroMemory(TempChar, 50);
+        sprintf(TempChar, " (AccumulatedFrames: %d)", dxgi_capt->GetAccumulatedFrames());
+        SetWindowTextA(hWnd, strcat(dxgi_capt->GetSelAdpName(), TempChar));
+        memset(dxgi_capt->GetSelAdpName() + AdpLen, 0, 200 - AdpLen);
 
         hdc = GetDC(hWnd);
         SetTextColor(hdc, RGB(255, 0, 0));
@@ -127,9 +133,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         ////////////////////////////
 
         size_t AdpLen = strlen(dxgi_capt->GetSelAdpName());
-        char TempChar[20];
-        ZeroMemory(TempChar, 20);
-        sprintf(TempChar, " (FPS: %f)", getFPS());
+        char TempChar[50];
+        ZeroMemory(TempChar, 50);
+        sprintf(TempChar, " (FPS: %f) (AccumulatedFrames: %d)", getFPS(), dxgi_capt->GetAccumulatedFrames());
         SetWindowTextA(hWnd, strcat(dxgi_capt->GetSelAdpName(), TempChar));
         memset(dxgi_capt->GetSelAdpName() + AdpLen, 0, 200 - AdpLen);
     }

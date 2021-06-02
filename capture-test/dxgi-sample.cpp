@@ -20,7 +20,10 @@ VideoDXGICaptor::VideoDXGICaptor()
 
     numAdp = 0;
     pAdapterIN = NULL;
+    selAdpName = NULL;
+    ZeroMemory(&frameInfo, sizeof(DXGI_OUTDUPL_FRAME_INFO));
 }
+
 VideoDXGICaptor::~VideoDXGICaptor()
 {
     Deinit();
@@ -70,6 +73,11 @@ BOOL VideoDXGICaptor::SelectAdapters(void)
 CHAR* VideoDXGICaptor::GetSelAdpName()
 {
     return selAdpName;
+}
+
+UINT VideoDXGICaptor::GetAccumulatedFrames()
+{
+    return frameInfo.AccumulatedFrames;
 }
 
 BOOL VideoDXGICaptor::Init()
@@ -236,8 +244,8 @@ BOOL VideoDXGICaptor::QueryFrame(void **pImgData)
     }
 
     IDXGIResource *hDesktopResource = NULL;
-    DXGI_OUTDUPL_FRAME_INFO FrameInfo;
-    HRESULT hr = m_hDeskDupl->AcquireNextFrame(200, &FrameInfo, &hDesktopResource);
+    //DXGI_OUTDUPL_FRAME_INFO FrameInfo;
+    HRESULT hr = m_hDeskDupl->AcquireNextFrame(200, &frameInfo, &hDesktopResource);
     if (FAILED(hr))
     {
         return FALSE;

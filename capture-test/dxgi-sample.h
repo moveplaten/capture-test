@@ -13,6 +13,7 @@ public:
     BOOL Init();
     VOID Deinit();
     CHAR* GetSelAdpName();
+    UINT GetAccumulatedFrames();
 
 public:
     virtual BOOL CaptureImage(void **pData);
@@ -34,4 +35,5 @@ private:
     UINT                    numAdp;
     IDXGIAdapter           *pAdapterIN;
     CHAR                   *selAdpName;
+    DXGI_OUTDUPL_FRAME_INFO frameInfo;
 };
