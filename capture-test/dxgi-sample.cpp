@@ -80,6 +80,11 @@ UINT VideoDXGICaptor::GetAccumulatedFrames()
     return frameInfo.AccumulatedFrames;
 }
 
+UINT VideoDXGICaptor::GetTotalMetadataBufferSize()
+{
+    return frameInfo.TotalMetadataBufferSize;
+}
+
 BOOL VideoDXGICaptor::Init()
 {
     HRESULT hr = S_OK;

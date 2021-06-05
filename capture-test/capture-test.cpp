@@ -107,9 +107,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         ////////////////////////////
 
         size_t AdpLen = strlen(dxgi_capt->GetSelAdpName());
-        char TempChar[50];
-        ZeroMemory(TempChar, 50);
-        sprintf(TempChar, " (AccumulatedFrames: %d)", dxgi_capt->GetAccumulatedFrames());
+        char TempChar[100];
+        ZeroMemory(TempChar, 100);
+        sprintf(TempChar, " (AccumulatedFrames: %d) (TotalMetadataBufferSize: %d)",
+        dxgi_capt->GetAccumulatedFrames(), dxgi_capt->GetTotalMetadataBufferSize());
         SetWindowTextA(hWnd, strcat(dxgi_capt->GetSelAdpName(), TempChar));
         memset(dxgi_capt->GetSelAdpName() + AdpLen, 0, 200 - AdpLen);
 
@@ -133,9 +134,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         ////////////////////////////
 
         size_t AdpLen = strlen(dxgi_capt->GetSelAdpName());
-        char TempChar[50];
-        ZeroMemory(TempChar, 50);
-        sprintf(TempChar, " (FPS: %f) (AccumulatedFrames: %d)", getFPS(), dxgi_capt->GetAccumulatedFrames());
+        char TempChar[100];
+        ZeroMemory(TempChar, 100);
+        sprintf(TempChar, " (FPS: %f) (AccumulatedFrames: %d) (TotalMetadataBufferSize: %d)",
+        getFPS(), dxgi_capt->GetAccumulatedFrames(), dxgi_capt->GetTotalMetadataBufferSize());
         SetWindowTextA(hWnd, strcat(dxgi_capt->GetSelAdpName(), TempChar));
         memset(dxgi_capt->GetSelAdpName() + AdpLen, 0, 200 - AdpLen);
     }

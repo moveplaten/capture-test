@@ -14,6 +14,7 @@ public:
     VOID Deinit();
     CHAR* GetSelAdpName();
     UINT GetAccumulatedFrames();
+    UINT GetTotalMetadataBufferSize();
 
 public:
     virtual BOOL CaptureImage(void **pData);
