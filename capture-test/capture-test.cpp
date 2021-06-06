@@ -41,6 +41,40 @@ int main(void)
     }
 }
 
+LONGLONG getQPCInterval(void)
+{
+    LARGE_INTEGER QPC;
+    bool clearStamp1 = false;
+    static LONGLONG stamp[2] = { 0, 0 };
+
+    if (!stamp[0])
+    {
+        QueryPerformanceCounter(&QPC);
+        stamp[0] = QPC.QuadPart;
+        clearStamp1 = true;
+    }
+    else
+    {
+        QueryPerformanceCounter(&QPC);
+        stamp[1] = QPC.QuadPart;
+    }
+
+    LONGLONG QPCInterval = abs(stamp[0] - stamp[1]);
+
+    if (clearStamp1) stamp[1] = 0;
+    else stamp[0] = 0;
+
+    return QPCInterval;
+}
+
+double getFPS(void)
+{
+    LARGE_INTEGER Frequency;
+    QueryPerformanceFrequency(&Frequency);
+    double timeInterval =  (double)getQPCInterval() / (double)Frequency.QuadPart;
+    double fps = (double)1.0 / timeInterval;
+    return fps;
+}
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -72,6 +106,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         capture(hWnd);
         ////////////////////////////
 
+        size_t AdpLen = strlen(dxgi_capt->GetSelAdpName());
+        char TempChar[100];
+        ZeroMemory(TempChar, 100);
+        sprintf(TempChar, " (AccumulatedFrames: %d) (TotalMetadataBufferSize: %d)",
+        dxgi_capt->GetAccumulatedFrames(), dxgi_capt->GetTotalMetadataBufferSize());
+        SetWindowTextA(hWnd, strcat(dxgi_capt->GetSelAdpName(), TempChar));
+        memset(dxgi_capt->GetSelAdpName() + AdpLen, 0, 200 - AdpLen);
 
         hdc = GetDC(hWnd);
         SetTextColor(hdc, RGB(255, 0, 0));
@@ -85,22 +126,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
 
 
-    case WM_MOVING:
+    case WM_MOVE:
     {
         moving = TRUE;
         ////////////////////////////
         capture(hWnd);
         ////////////////////////////
+
         size_t AdpLen = strlen(dxgi_capt->GetSelAdpName());
-        char TempChar[20];
-        ZeroMemory(TempChar, 20);
-        static int testfps = 0;
-        sprintf(TempChar, " (FPS: %d)", testfps++);
+        char TempChar[100];
+        ZeroMemory(TempChar, 100);
+        sprintf(TempChar, " (FPS: %f) (AccumulatedFrames: %d) (TotalMetadataBufferSize: %d)",
+        getFPS(), dxgi_capt->GetAccumulatedFrames(), dxgi_capt->GetTotalMetadataBufferSize());
         SetWindowTextA(hWnd, strcat(dxgi_capt->GetSelAdpName(), TempChar));
         memset(dxgi_capt->GetSelAdpName() + AdpLen, 0, 200 - AdpLen);
     }
     break;
 
+    case WM_CAPTURECHANGED:
+    {
+        SetWindowTextA(hWnd, dxgi_capt->GetSelAdpName());
+    }
 
     case WM_PAINT:
     {

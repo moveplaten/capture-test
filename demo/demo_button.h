@@ -43,11 +43,11 @@ private:
     HINSTANCE hinstMain;
 
 public:
-    virtual void setBtnName() = 0;
+    virtual void setBtnName() {};
     void setHwndSelf(HWND hwnd);
     void reverseClickStat();
-    virtual void setWndClass() = 0;
-    virtual void setWndMenu() = 0;
+    virtual void setWndClass() {};
+    virtual void setWndMenu() {};
     void setHinstMain();
     
     char* getBtnName() { return btnName; };
@@ -59,7 +59,7 @@ public:
     HINSTANCE getInstance() { return hinstMain; };
 
     bool initControl();
-    void internInit();
+    void internInit(char* _btnName, char* _wndClass, HMENU _hwndMenu);
     bool createWndSelf(HWND hwndMain);
     //virtual LRESULT CALLBACK wndControlProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -69,60 +69,28 @@ public:
 
 
 
-/* Below 3 + 1 Button*/
+/* Below Real Button*/
 
-class setting_button : public demo_button
+class real_button : public demo_button
 {
 private:
     /* data */
+    WNDPROC wndProc;
+
 public:
-    virtual void setBtnName();
-    virtual void setWndClass();
-    virtual void setWndMenu();
-    virtual WNDPROC getWndProc();
+    virtual WNDPROC getWndProc(){ return wndProc; };
 
-    setting_button();
-    ~setting_button();
-};
+    real_button(char* _btnName, char* _wndClass, HMENU _hwndMenu)
+    {
+        wndProc = nullptr;
+        internInit(_btnName, _wndClass, _hwndMenu);
+    };
 
-class preview_button : public demo_button
-{
-private:
-    /* data */
-public:
-    virtual void setBtnName();
-    virtual void setWndClass();
-    virtual void setWndMenu();
-    virtual WNDPROC getWndProc();
+    real_button(char* _btnName, char* _wndClass, HMENU _hwndMenu, WNDPROC _wndProc)
+    {
+        wndProc = _wndProc;
+        internInit(_btnName, _wndClass, _hwndMenu);
+    };
 
-    preview_button();
-    ~preview_button();
-};
-
-class output_button : public demo_button
-{
-private:
-    /* data */
-public:
-    virtual void setBtnName();
-    virtual void setWndClass();
-    virtual void setWndMenu();
-    virtual WNDPROC getWndProc();
-
-    output_button();
-    ~output_button();
-};
-
-class region_button : public demo_button
-{
-private:
-    /* data */
-public:
-    virtual void setBtnName();
-    virtual void setWndClass();
-    virtual void setWndMenu();
-    virtual WNDPROC getWndProc();
-
-    region_button();
-    ~region_button();
+    ~real_button() {};
 };

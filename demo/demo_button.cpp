@@ -32,13 +32,18 @@ demo_button::~demo_button()
 }
 
 
-void demo_button::internInit()
+void demo_button::internInit(char* _btnName, char* _wndClass, HMENU _hwndMenu)
 {
-    setBtnName();
-    setWndClass();
-    setWndMenu();
+    HMENU* __hwndMenu = getWndMenu();
+    strcat(getBtnName(), _btnName);
+    strcat(getWndClass(), _wndClass);
+    *__hwndMenu = _hwndMenu;
+
     setHinstMain();
-    if (!initControl()) exit(1);
+    if (wndClass != "BUTTON")
+    {
+        if (!initControl()) exit(1);
+    }
 }
 
 bool demo_button::initControl()
