@@ -1,39 +1,11 @@
 #include "demo_button.h"
 
+LRESULT CALLBACK outputControlProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-output_button::output_button()
-{
-    internInit();
-}
+real_button outputBtn("OUTPUT", "outputClass", (HMENU)ID_OUTPUT, outputControlProc);
 
-output_button::~output_button()
-{
-}
-
-void output_button::setBtnName()
-{
-    char* pName = getBtnName();
-    strcat(pName, "OUTPUT");
-}
-
-void output_button::setWndClass()
-{
-    char* pName = getWndClass();
-    strcat(pName, "OutputControl");
-}
-
-void output_button::setWndMenu()
-{
-    HMENU* hmenu = getWndMenu();
-    *hmenu = (HMENU)ID_OUTPUT;
-}
 
 LRESULT CALLBACK outputControlProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     return 0;
-}
-
-WNDPROC output_button::getWndProc()
-{
-    return outputControlProc;
 }

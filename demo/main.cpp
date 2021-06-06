@@ -14,10 +14,7 @@
 
 /*GLOBAL */
 int borderXSize, borderYSize;
-setting_button settingBtn;
-preview_button previewBtn;
-output_button outputBtn;
-region_button regionBtn;
+extern real_button settingBtn, previewBtn, outputBtn, regionBtn;
 
 
 LRESULT CALLBACK MainProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
