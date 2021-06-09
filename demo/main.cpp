@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <CommCtrl.h>
 #include "demo_button.h"
+#include "demo_capture/gdi_capture.h"
 
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' "\
@@ -15,6 +16,7 @@
 /*GLOBAL */
 int borderXSize, borderYSize;
 extern real_button settingBtn, previewBtn, outputBtn, regionBtn;
+gdi_capture gdiCapt;
 
 
 LRESULT CALLBACK MainProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -62,6 +64,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ShowWindow(hwndMain, SW_SHOW);
     UpdateWindow(hwndMain);
 
+    gdiCapt.internInit(regionBtn.getHwndSelf());
+    gdiCapt.captureThreadStart();
+
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0))
     {
@@ -84,25 +89,41 @@ LRESULT CALLBACK MainProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
         case ID_SETTING:
         {
-            MessageBox(0, "OK1", 0, 0);
+            MessageBox(hwnd, "OK1", 0, 0);
         }
         break;
 
         case ID_PREVIEW:
         {
-            MessageBox(0, "OK2", 0, 0);
+            if (gdiCapt.getRunning())
+            {
+                MessageBox(hwnd, "Already Running!", 0, 0);
+            }
+            else
+            {
+                gdiCapt.captureThreadRestart();
+                MessageBox(hwnd, "Restart", 0, 0);
+            }
         }
         break;
 
-        case ID_OUTPUT:
+        case ID_OUTPUT:  //As a stop test button;
         {
-            MessageBox(0, "OK3", 0, 0);
+            if (!gdiCapt.getRunning())
+            {
+                MessageBox(hwnd, "Already Stop!", 0, 0);
+            }
+            else
+            {
+                gdiCapt.captureThreadStop();
+                MessageBox(hwnd, "Stop", 0, 0);
+            }
         }
         break;
 
         case ID_REGION:
         {
-            MessageBox(0, "OK4", 0, 0);
+            MessageBox(hwnd, "OK4", 0, 0);
         }
         break;
 

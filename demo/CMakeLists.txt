@@ -9,6 +9,9 @@ set(SOURCE_CPP
     output_button.cpp
     region_button.cpp
     demo_button.cpp
+    ./demo_capture/demo_capture.cpp
+    ./demo_capture/dxgi_capture.cpp
+    ./demo_capture/gdi_capture.cpp
 )
 
 add_executable(demo WIN32
