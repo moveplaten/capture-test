@@ -14,12 +14,12 @@ private:
     DWORD ThreadId;
 
 public:
-    bool captureThreadStart();  //just call once, then call Restart();
+    bool captureThreadStart(HWND _hwndDst);  //just call once, then call Restart();
     virtual int captureLoop() = 0;
     void captureThreadStop();
     void captureThreadRestart();
 
-    virtual int internInit() = 0;
+    virtual int internInit(HWND _hwndDst) = 0;
 
     void setFPS(double _fps) { fps = _fps; }
 

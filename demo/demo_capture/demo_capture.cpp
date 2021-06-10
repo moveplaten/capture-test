@@ -2,8 +2,9 @@
 
 DWORD WINAPI captureThread(_In_ void* param);
 
-bool demo_capture::captureThreadStart()
+bool demo_capture::captureThreadStart(HWND _hwndDst)
 {
+    internInit(_hwndDst);
     stopEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
     startEvent = CreateEvent(nullptr, TRUE, TRUE, nullptr);
     CreateThread(nullptr, 0, captureThread, this, 0, &ThreadId);

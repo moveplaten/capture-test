@@ -52,7 +52,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     settingBtn.createWndSelf(hwndMain);
     previewBtn.createWndSelf(hwndMain);
     outputBtn.createWndSelf(hwndMain);
+
     regionBtn.createWndSelf(hwndMain);
+    void* originWndProc;
+    originWndProc = (void*) GetWindowLongPtrW(regionBtn.getHwndSelf(), GWLP_WNDPROC);
+    SetWindowLongPtr(regionBtn.getHwndSelf(), GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(regionBtn.getWndProc()));
 
     borderXSize = borderYSize = 0;
     borderXSize += (GetSystemMetrics(SM_CXSIZEFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER)) * 2;
@@ -64,8 +68,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ShowWindow(hwndMain, SW_SHOW);
     UpdateWindow(hwndMain);
 
-    gdiCapt.internInit(regionBtn.getHwndSelf());
-    gdiCapt.captureThreadStart();
+    //gdiCapt.internInit(regionBtn.getHwndSelf());
+    gdiCapt.captureThreadStart(regionBtn.getHwndSelf());
+    SetWindowTextA(previewBtn.getHwndSelf(), "STOP");
+    previewBtn.reverseClickStat();
 
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0))
@@ -95,29 +101,24 @@ LRESULT CALLBACK MainProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         case ID_PREVIEW:
         {
-            if (gdiCapt.getRunning())
-            {
-                MessageBox(hwnd, "Already Running!", 0, 0);
-            }
-            else
+            if (!previewBtn.getClickStat())
             {
                 gdiCapt.captureThreadRestart();
-                MessageBox(hwnd, "Restart", 0, 0);
-            }
-        }
-        break;
-
-        case ID_OUTPUT:  //As a stop test button;
-        {
-            if (!gdiCapt.getRunning())
-            {
-                MessageBox(hwnd, "Already Stop!", 0, 0);
+                previewBtn.reverseClickStat();
+                SetWindowTextA(previewBtn.getHwndSelf(), "STOP");
             }
             else
             {
                 gdiCapt.captureThreadStop();
-                MessageBox(hwnd, "Stop", 0, 0);
+                previewBtn.reverseClickStat();
+                SetWindowTextA(previewBtn.getHwndSelf(), previewBtn.getBtnName());
             }
+        }
+        break;
+
+        case ID_OUTPUT:
+        {
+            MessageBox(hwnd, "OK3", 0, 0);
         }
         break;
 

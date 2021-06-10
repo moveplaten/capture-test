@@ -1,9 +1,9 @@
 #include "gdi_capture.h"
 #include <stdio.h>
 
-int gdi_capture::internInit(HWND hwnd)
+int gdi_capture::internInit(HWND _hwndDst)
 {
-    hwndDst = hwnd;
+    hwndDst = _hwndDst;
     strcat(getName(), "GDI");
     return 0;
 }

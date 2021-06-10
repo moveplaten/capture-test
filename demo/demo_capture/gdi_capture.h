@@ -8,11 +8,13 @@ private:
     /* data */
     HWND hwndDst;
 
-public:
+protected:
     virtual int captureLoop();
-    virtual int internInit() { return 0; }
-    virtual int internInit(HWND hwnd);
+    virtual int internInit(HWND _hwndDst);
 
+public:
+
+    
     gdi_capture();
     ~gdi_capture();
 };
