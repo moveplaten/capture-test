@@ -355,7 +355,10 @@ void * CaptureInternal(void)
         return NULL;
     }
 
-    dxgi_capt->CaptureImage(&pImgData);
+    if(!dxgi_capt->CaptureImage(&pImgData))
+    {
+        return NULL;
+    }
     //delete CaptureTest;
     //free(pImgData);
     return pImgData;

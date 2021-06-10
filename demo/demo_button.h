@@ -42,13 +42,18 @@ private:
     HMENU hwndMenu;
     HINSTANCE hinstMain;
 
-public:
-    virtual void setBtnName() {};
-    void setHwndSelf(HWND hwnd);
-    void reverseClickStat();
+    bool initControl();
     virtual void setWndClass() {};
     virtual void setWndMenu() {};
     void setHinstMain();
+    virtual void setBtnName() {};
+    void setHwndSelf(HWND hwnd);
+
+protected:
+    void internInit(char* _btnName, char* _wndClass, HMENU _hwndMenu);
+
+public:
+    void reverseClickStat();
     
     char* getBtnName() { return btnName; };
     HWND getHwndSelf() { return hwndSelf; };
@@ -57,9 +62,7 @@ public:
     HMENU* getWndMenu() { return &hwndMenu; };
     virtual WNDPROC getWndProc() = 0;
     HINSTANCE getInstance() { return hinstMain; };
-
-    bool initControl();
-    void internInit(char* _btnName, char* _wndClass, HMENU _hwndMenu);
+    
     bool createWndSelf(HWND hwndMain);
     //virtual LRESULT CALLBACK wndControlProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
