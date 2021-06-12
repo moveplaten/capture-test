@@ -22,6 +22,7 @@ public:
     virtual int internInit(HWND _hwndDst) = 0;
 
     void setFPS(double _fps) { fps = _fps; }
+    double fpsCount();
 
     char* getName() { return name; }
     double getFPS() { return fps; }
