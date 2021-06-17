@@ -26,8 +26,10 @@ DWORD captureThread(_In_ void* param)
         }
         else
         {
-            dc->captureLoop();
-            dc->setFPS(dc->fpsCount());
+            if (dc->captureLoop())
+            {
+                dc->setFPS(dc->fpsCount());
+            }
         }
     }
 
