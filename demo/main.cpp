@@ -15,7 +15,7 @@
 
 /*GLOBAL */
 int borderXSize, borderYSize;
-extern real_button settingBtn, previewBtn, outputBtn, regionBtn;
+extern real_button settingBtn, previewBtn, outputBtn, regionBtn, statusBtn;
 gdi_capture gdiCapt;
 
 
@@ -57,6 +57,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     void* originWndProc;
     originWndProc = (void*) GetWindowLongPtrW(regionBtn.getHwndSelf(), GWLP_WNDPROC);
     SetWindowLongPtr(regionBtn.getHwndSelf(), GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(regionBtn.getWndProc()));
+
+    statusBtn.createWndSelf(hwndMain);
+    statusBtn.setHeight(16);
+    SetWindowLongPtr(statusBtn.getHwndSelf(), GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(statusBtn.getWndProc()));
 
     borderXSize = borderYSize = 0;
     borderXSize += (GetSystemMetrics(SM_CXSIZEFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER)) * 2;
@@ -181,7 +185,7 @@ void windowResize(HWND hwnd)
 
     int top_margin = 70;
     int RgnWidth = client.right;
-    int RgnHeight = client.bottom - top_margin;
+    int RgnHeight = client.bottom - top_margin - statusBtn.getHeight();
     //int ViewRgnCenterX = RgnWidth / 2;
     //int ViewRgnCenterY = top_margin + RgnHeight / 2;
 
@@ -215,4 +219,6 @@ void windowResize(HWND hwnd)
     SetWindowPos(outputBtn.getHwndSelf(), NULL, Btn_StartX, Btn_StartY, outputBtn.getWidth(), outputBtn.getHeight(), flags);
 
     SetWindowPos(regionBtn.getHwndSelf(), NULL, ViewRgnStartX, ViewRgnStartY, ViewRgnWidth, ViewRgnHeight, flags);
+
+    SetWindowPos(statusBtn.getHwndSelf(), NULL, client.left, client.bottom - statusBtn.getHeight(), client.right - client.left, statusBtn.getHeight(), flags);
 }

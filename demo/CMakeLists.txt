@@ -8,6 +8,7 @@ set(SOURCE_CPP
     preview_button.cpp
     output_button.cpp
     region_button.cpp
+    status_button.cpp
     demo_button.cpp
     ./demo_capture/demo_capture.cpp
     ./demo_capture/dxgi_capture.cpp

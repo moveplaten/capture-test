@@ -26,7 +26,10 @@ DWORD captureThread(_In_ void* param)
         }
         else
         {
-            dc->captureLoop();
+            if (dc->captureLoop())
+            {
+                dc->setFPS(dc->fpsCount(0));
+            }
         }
     }
 
@@ -60,4 +63,30 @@ demo_capture::demo_capture()
 
 demo_capture::~demo_capture()
 {
+}
+
+#define MAX_QPC_CHANNEL 100
+
+LONGLONG getQPCInterval(int channel)
+{
+    if (channel >= MAX_QPC_CHANNEL || channel < 0)
+    {
+        return -1;
+    }
+    LARGE_INTEGER QPC;
+    QueryPerformanceCounter(&QPC);
+    LONGLONG now = QPC.QuadPart;
+    static LONGLONG prev[MAX_QPC_CHANNEL] = { 0 };
+    LONGLONG QPCInterval = now - prev[channel];
+    prev[channel] = now;
+    return QPCInterval;
+}
+
+double demo_capture::fpsCount(int channel)
+{
+    LARGE_INTEGER Frequency;
+    QueryPerformanceFrequency(&Frequency);
+    double timeInterval = (double)getQPCInterval(channel) / (double)Frequency.QuadPart;
+    double fps = (double)1.0 / timeInterval;
+    return fps;
 }

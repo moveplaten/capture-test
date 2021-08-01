@@ -41,7 +41,7 @@ int main(void)
     }
 }
 
-LONGLONG getQPCInterval(void)
+LONGLONG getQPCInterval_temp(void)
 {
     LARGE_INTEGER QPC;
     bool clearStamp1 = false;
@@ -67,11 +67,28 @@ LONGLONG getQPCInterval(void)
     return QPCInterval;
 }
 
-double getFPS(void)
+#define MAX_QPC_CHANNEL 100
+
+LONGLONG getQPCInterval(int channel)
+{
+    if (channel >= MAX_QPC_CHANNEL || channel < 0)
+    {
+        return -1;
+    }
+    LARGE_INTEGER QPC;
+    QueryPerformanceCounter(&QPC);
+    LONGLONG now = QPC.QuadPart;
+    static LONGLONG prev[MAX_QPC_CHANNEL] = { 0 };
+    LONGLONG QPCInterval = now - prev[channel];
+    prev[channel] = now;
+    return QPCInterval;
+}
+
+double getFPS(int channel)
 {
     LARGE_INTEGER Frequency;
     QueryPerformanceFrequency(&Frequency);
-    double timeInterval =  (double)getQPCInterval() / (double)Frequency.QuadPart;
+    double timeInterval =  (double)getQPCInterval(channel) / (double)Frequency.QuadPart;
     double fps = (double)1.0 / timeInterval;
     return fps;
 }
@@ -137,7 +154,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         char TempChar[100];
         ZeroMemory(TempChar, 100);
         sprintf(TempChar, " (FPS: %f) (AccumulatedFrames: %d) (TotalMetadataBufferSize: %d)",
-        getFPS(), dxgi_capt->GetAccumulatedFrames(), dxgi_capt->GetTotalMetadataBufferSize());
+        getFPS(0), dxgi_capt->GetAccumulatedFrames(), dxgi_capt->GetTotalMetadataBufferSize());
         SetWindowTextA(hWnd, strcat(dxgi_capt->GetSelAdpName(), TempChar));
         memset(dxgi_capt->GetSelAdpName() + AdpLen, 0, 200 - AdpLen);
     }

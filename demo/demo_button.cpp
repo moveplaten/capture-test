@@ -40,10 +40,8 @@ void demo_button::internInit(char* _btnName, char* _wndClass, HMENU _hwndMenu)
     *__hwndMenu = _hwndMenu;
 
     setHinstMain();
-    if (wndClass != "BUTTON")
-    {
-        if (!initControl()) exit(1);
-    }
+
+    if (!initControl()) exit(1);
 }
 
 bool demo_button::initControl()

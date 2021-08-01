@@ -9,6 +9,7 @@ enum
     ID_PREVIEW,
     ID_OUTPUT,
     ID_REGION,
+    ID_STATUS,
 };
 
 
@@ -25,6 +26,7 @@ public:
     int getWidth() { return width; };
     int getHeight() { return height; };
     DWORD getInitStyle() { return initial_style; };
+    void setHeight(int _height) { height = _height; };
 
     _button();
     ~_button();

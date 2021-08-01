@@ -33,7 +33,8 @@ int gdi_capture::captureLoop()
     ReleaseDC(NULL, hdcFullScreen);
     ReleaseDC(hwndDst, hdcWindow);
 
-    return 0;
+    if (OK) return 1;
+    else return 0;
 }
 
 
